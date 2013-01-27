@@ -1,4 +1,4 @@
-classdef percentile < eegpipe.verbose
+classdef percentile < goo.verbose
     
     properties
         Estimator;
