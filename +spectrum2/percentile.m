@@ -31,8 +31,7 @@ classdef percentile < goo.verbose
             opt.Percentile      = [25 75];
             % There is a bug here, this doesnt work if you set Normalize to
             % false. Fix that at some point! In general this function
-            % requires heavy cleaning. 
-            
+            % requires heavy cleaning.        
             [~, opt] = process_arguments(opt, varargin);
 
             if numel(data) == 1 && size(data{1},2)>size(data{1},1) && ...
