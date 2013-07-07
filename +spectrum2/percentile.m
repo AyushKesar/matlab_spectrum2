@@ -47,15 +47,15 @@ classdef percentile < goo.verbose
                 
                 for j = 2:numel(data)
                     tmp = psd(obj, data{j}, varargin{:});
-                    minData  = min(minData,tmp.ConfInterval(:,1));
-                    maxData  = max(maxData,tmp.ConfInterval(:,2));
+                    %minData  = min(minData,tmp.ConfInterval(:,1));
+                    %maxData  = max(maxData,tmp.ConfInterval(:,2));
                     allData(j,:) = tmp.Data;
                 end
                 medianData = median(allData,1);
                 dspData = dspdata.psd(medianData, dspData.Frequencies, ...
                     'Fs', opt.Fs, 'SpectrumType', opt.SpectrumType, ...
                     'CenterDC', opt.CenterDC);
-                dspData.ConfLevel = 'ConfInt';
+                dspData.ConfLevel = opt.Percentile(1)/100;
                 confInt = [prctile(allData, opt.Percentile(1), 1)', ...
                 prctile(allData, opt.Percentile(2), 1)'];
             
@@ -138,7 +138,9 @@ classdef percentile < goo.verbose
             dspData = dspdata.psd(medianData, Hpsd.Frequencies, ...
                 'Fs', opt.Fs, 'SpectrumType', opt.SpectrumType, ...
                 'CenterDC', opt.CenterDC);
-            dspData.ConfLevel = 'ConfInt';
+            
+            
+            dspData.ConfLevel = opt.Percentile(1)/100;
             
             confInt = [prctile(allData, opt.Percentile(1), 1)', ...
                 prctile(allData, opt.Percentile(2), 1)'];
