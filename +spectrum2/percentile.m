@@ -96,9 +96,7 @@ classdef percentile < goo.verbose
                 data{i} = data{i} - mean(data{i});
                 thisVar = var(data{i}, [], 2);
                 
-                % Ignore weird channels? From where do these come from??
-                % I think they are coming from the adaptive filters
-                % becoming unstable
+                % Ignore weird channels? From where could these come from??
                 if any(isnan(data{i})) || any(isinf(data{i})),
                     warning('spectrum2:minmax:IgnoredChannel', ...
                         ['\nSignal %d contains NaNs and/or Inf values. ' ...
@@ -108,9 +106,6 @@ classdef percentile < goo.verbose
                 
                 % Ignore flat channels
                 if thisVar < eps,
-%                     warning('spectrum2:minmax:IgnoredChannel', ...
-%                         ['\nVariance of signal %d is below eps. ' ...
-%                         'It will be ignored'], i)
                     continue;
                 end
                 
@@ -134,18 +129,24 @@ classdef percentile < goo.verbose
                 fprintf('\n');
             end
             allData = allData(1:psdCount, :);
-            medianData = median(allData,1);
+            
+            if psdCount > 1,
+                medianData = median(allData,1);
+            else
+                medianData = allData;
+            end
             dspData = dspdata.psd(medianData, Hpsd.Frequencies, ...
                 'Fs', opt.Fs, 'SpectrumType', opt.SpectrumType, ...
                 'CenterDC', opt.CenterDC);
             
-            
-            dspData.ConfLevel = opt.Percentile(1)/100;
-            
-            confInt = [prctile(allData, opt.Percentile(1), 1)', ...
-                prctile(allData, opt.Percentile(2), 1)'];
-            
-            dspData.ConfInterval = confInt;
+            if psdCount > 1,
+                dspData.ConfLevel = opt.Percentile(1)/100;
+                
+                confInt = [prctile(allData, opt.Percentile(1), 1)', ...
+                    prctile(allData, opt.Percentile(2), 1)'];
+                
+                dspData.ConfInterval = confInt;
+            end
            
         end
     end
