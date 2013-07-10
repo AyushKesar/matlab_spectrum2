@@ -140,7 +140,7 @@ classdef percentile < goo.verbose
                 'CenterDC', opt.CenterDC);
             
             if psdCount > 1,
-                dspData.ConfLevel = opt.Percentile(1)/100;
+                dspData.ConfLevel = opt.Percentile(2)/100;
                 
                 confInt = [prctile(allData, opt.Percentile(1), 1)', ...
                     prctile(allData, opt.Percentile(2), 1)'];
